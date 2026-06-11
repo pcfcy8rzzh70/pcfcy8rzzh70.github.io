@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>探究武夷丹霞地貌 | 雨水侵蚀虚拟实验室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #c8ddd9 0%, #aec3c0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            font-family: 'Segoe UI', 'Roboto', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        .lab-container {
+            max-width: 1400px;
+            width: 100%;
+            background: #fef7e8;
+            background-image: radial-gradient(circle at 10% 20%, rgba(200, 170, 120, 0.12) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+            border-radius: 64px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+        }
+
+        .lab-header {
+            background: linear-gradient(135deg, #9b4a24, #5e2c12);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid #ffcd94;
+        }
+
+        .lab-header h1 {
+            font-size: 2.3rem;
+            letter-spacing: 4px;
+            color: #fff3cf;
+            text-shadow: 4px 4px 0 #4a2510;
+            font-weight: 800;
+        }
+
+        .lab-header p {
+            color: #ffdfaa;
+            font-size: 1.1rem;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .experiment-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 35px 30px 25px 30px;
+        }
+
+        .simulation-panel {
+            flex: 2;
+            min-width: 280px;
+            background: #e7dcc0;
+            border-radius: 58px;
+            box-shadow: inset 0 0 0 2px #fff9e8, 0 12px 24px rgba(0, 0, 0, 0.2);
+            padding: 20px 20px 25px;
+        }
+
+        .device-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #4b2a1a;
+            background: #ffefcf;
+            display: inline-block;
+            padding: 0 20px;
+            border-radius: 60px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px #b98f64, 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .rock-soil-wrapper {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .sim-card {
+            background: #f5ebd2;
+            border-radius: 48px;
+            padding: 20px 18px 25px;
+            flex: 1;
+            min-width: 220px;
+            box-shadow: 0 10px 18px rgba(85, 45, 20, 0.2);
+            text-align: center;
+        }
+
+        .sim-card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 10px;
+            color: #5c2e1a;
+            background: #ffefc0;
+            display: inline-block;
+            padding: 0 18px;
+            border-radius: 50px;
+        }
+
+        .canvas-area {
+            margin: 15px 0;
+            background: #d9c9aa;
+            border-radius: 42px;
+            padding: 12px;
+            box-shadow: inset 0 0 0 3px #fff3df, 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #cfbc92;
+            border-radius: 32px;
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        #rockCanvas {
+            background: radial-gradient(circle at 30% 20%, #bb7a46, #854f2c);
+        }
+        #soilCanvas {
+            background: #b87c4b;
+        }
+
+        .indicator {
+            margin-top: 12px;
+            background: #f2e5cf;
+            border-radius: 50px;
+            padding: 8px 12px;
+            font-weight: bold;
+            color: #3c2a1f;
+        }
+
+        .progress-bar-bg {
+            background: #9b7a5c;
+            border-radius: 30px;
+            height: 14px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            transition: width 0.4s ease;
+        }
+
+        .control-panel {
+            flex: 1.2;
+            min-width: 280px;
+            background: #fff7ea;
+            border-radius: 52px;
+            padding: 20px 22px;
+            box-shadow: inset 0 1px 4px #fffff0, 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .rain-buttons {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .rain-btn {
+            flex: 1;
+            background: #4f7d9f;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: bold;
+            padding: 14px 0;
+            border-radius: 60px;
+            color: white;
+            box-shadow: 0 6px 0 #1e445e;
+            cursor: pointer;
+            transition: 0.08s linear;
+            font-family: inherit;
+        }
+
+        .rain-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #1e445e;
+        }
+
+        .btn-200 {
+            background: #418ab3;
+            box-shadow: 0 6px 0 #235b7c;
+        }
+        .btn-500 {
+            background: #c55a2c;
+            box-shadow: 0 6px 0 #7a3617;
+        }
+        .reset-btn {
+            background: #7f6b5c;
+            box-shadow: 0 6px 0 #4d3e33;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .record-box {
+            background: #ede0ca;
+            border-radius: 40px;
+            padding: 15px;
+            margin: 18px 0;
+        }
+
+        .record-item {
+            background: #fef4e2;
+            margin: 14px 0;
+            padding: 12px;
+            border-radius: 32px;
+            border-left: 8px solid #b65f2e;
+        }
+
+        .record-item h4 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #48200b;
+        }
+
+        .badge {
+            background: #995a33;
+            color: white;
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(120deg, #f1e4cf, #e2d0b0);
+            border-radius: 38px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        footer {
+            background: #3a281c;
+            color: #ffeba7;
+            text-align: center;
+            padding: 16px;
+            font-size: 0.9rem;
+            border-top: 2px solid #ffcf8a;
+        }
+
+        @media (max-width: 780px) {
+            .experiment-area { flex-direction: column; }
+            .rain-btn { font-size: 1.2rem; }
+            .lab-header h1 { font-size: 1.6rem; }
+        }
+        button {
+            cursor: pointer;
+        }
+        /* 动态雨层 */
+        .dynamic-rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .click-feedback {
+            transition: all 0.05s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lab-container">
+    <div class="lab-header">
+        <h1>🌧️ 探究武夷丹霞地貌 🏔️</h1>
+        <p>虚拟侵蚀实验室 · 雨水对丹霞岩石 & 山地土壤的侵蚀作用模拟</p>
+    </div>
+
+    <div class="experiment-area">
+        <!-- 左侧模拟装置 -->
+        <div class="simulation-panel">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <div class="device-title">🧪 模拟装置：丹霞岩石 + 山地土壤</div>
+            </div>
+            <div class="rock-soil-wrapper">
+                <!-- 丹霞岩石装置 -->
+                <div class="sim-card">
+                    <h3>⛰️ 丹霞岩石</h3>
+                    <div class="canvas-area">
+                        <canvas id="rockCanvas" width="300" height="200" style="width:100%; height:auto; max-width:300px; aspect-ratio:300/200"></canvas>
+                    </div>
+                    <div class="indicator">
+                        <span>🔬 岩石侵蚀程度</span>
+                        <div class="progress-bar-bg"><div id="rockErosionFill" class="progress-fill" style="width:0%; background:#bd5a2c;"></div></div>
+                        <span id="rockErosionText">侵蚀率: 0%</span>
+                    </div>
+                    <div class="indicator" style="margin-top: 6px;">
+                        💧 表面裂隙 & 剥落指数
+                    </div>
+                </div>
+
+                <!-- 山地土壤装置 -->
+                <div class="sim-card">
+                    <h3>🌱 山地土壤</h3>
+                    <div class="canvas-area">
+                        <canvas id="soilCanvas" width="300" height="200" style="width:100%; height:auto; max-width:300px; aspect-ratio:300/200"></canvas>
+                    </div>
+                    <div class="indicator">
+                        <span>🪨 土壤剩余量</span>
+                        <div class="progress-bar-bg"><div id="soilRemainFill" class="progress-fill" style="width:100%; background:#6f8f5f;"></div></div>
+                        <span id="soilRemainText">保有量: 100%</span>
+                    </div>
+                    <div class="indicator" style="margin-top: 6px;">
+                        🍂 有机质 & 颗粒流失显示
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.9rem; background:#dccc9a; border-radius: 80px; padding: 5px;">
+                📌 点击下方降水量按钮，模拟雨水冲刷侵蚀过程
+            </div>
+        </div>
+
+        <!-- 右侧控制与记录 -->
+        <div class="control-panel">
+            <div style="text-align: center;">
+                <span style="background:#c77e48; padding:6px 20px; border-radius: 50px; color:white;">💧 降水梯度实验 💧</span>
+            </div>
+            <div class="rain-buttons">
+                <button id="rain200Btn" class="rain-btn btn-200">🌦️ 200mm 降水量</button>
+                <button id="rain500Btn" class="rain-btn btn-500">⛈️ 500mm 降水量</button>
+            </div>
+            <button id="resetExpBtn" class="rain-btn reset-btn">🔄 重置实验装置</button>
+
+            <!-- 观察记录区 -->
+            <div class="record-box">
+                <div style="font-weight: bold; font-size: 1.3rem; margin-bottom: 12px;">📋 侵蚀观察记录</div>
+                <div id="record200Area" class="record-item">
+                    <h4><span class="badge">200mm 降水</span> 待实验</h4>
+                    <p id="desc200">⚡ 点击「200mm降水量」进行模拟，记录岩石与土壤侵蚀现象。</p>
+                </div>
+                <div id="record500Area" class="record-item">
+                    <h4><span class="badge">500mm 降水</span> 待实验</h4>
+                    <p id="desc500">⚡ 点击「500mm降水量」进行模拟，记录强降水侵蚀状况。</p>
+                </div>
+            </div>
+            <!-- 结论与原因总结 -->
+            <div class="conclusion-box">
+                <h3>🔍 实验结论 & 原因总结</h3>
+                <div id="conclusionText" style="font-size: 0.98rem; line-height: 1.45;">
+                    🧪 点击降水量按钮，对比两个梯度下丹霞岩石和山地土壤的侵蚀差异。<br>
+                    📊 依据模拟结果，分析降水量对侵蚀作用的控制机制。
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        🌊 模拟实验基于真实地理学原理：径流冲刷力与降水量正相关，丹霞岩石抗蚀性较强但持续降水导致裂隙扩大；山地土壤结构松散，更易流失。
+    </footer>
+</div>
+
+<script>
+    // ---------- 实验核心状态 ----------
+    let rockErosionPercent = 0;      // 0~100
+    let soilRemainPercent = 100;     // 0~100
+    
+    // DOM 元素
+    const rockCanvas = document.getElementById('rockCanvas');
+    const soilCanvas = document.getElementById('soilCanvas');
+    let rockCtx = rockCanvas.getContext('2d');
+    let soilCtx = soilCanvas.getContext('2d');
+    
+    // 固定canvas分辨率，确保绘图清晰
+    function initCanvasSize() {
+        rockCanvas.width = 300;
+        rockCanvas.height = 200;
+        soilCanvas.width = 300;
+        soilCanvas.height = 200;
+        // 重新获取context（避免丢失）
+        rockCtx = rockCanvas.getContext('2d');
+        soilCtx = soilCanvas.getContext('2d');
+        drawAll();
+    }
+    
+    // 绘制丹霞岩石（侵蚀程度动态变化）
+    function drawRock(erosion) {
+        if (!rockCtx) return;
+        rockCtx.clearRect(0, 0, rockCanvas.width, rockCanvas.height);
+        // 丹霞岩基色
+        const grad = rockCtx.createLinearGradient(20, 30, 280, 180);
+        grad.addColorStop(0, '#bc6f3a');
+        grad.addColorStop(1, '#9a4d23');
+        rockCtx.fillStyle = grad;
+        rockCtx.fillRect(0, 0, rockCanvas.width, rockCanvas.height);
+        
+        // 沉积岩纹理
+        rockCtx.save();
+        rockCtx.globalAlpha = 0.5;
+        for(let i=0; i<12; i++) {
+            rockCtx.beginPath();
+            let y = 25 + i*14;
+            rockCtx.moveTo(10, y);
+            rockCtx.quadraticCurveTo(150, y+4, 290, y-2);
+            rockCtx.lineWidth = 2.5;
+            rockCtx.strokeStyle = '#6b2e14';
+            rockCtx.stroke();
+        }
+        rockCtx.globalAlpha = 0.7;
+        for(let i=0;i<40;i++) {
+            rockCtx.fillStyle = '#6f3a1a';
+            rockCtx.beginPath();
+            rockCtx.arc(40+Math.random()*220, 30+Math.random()*140, 1+Math.random()*3, 0, Math.PI*2);
+            rockCtx.fill();
+        }
+        rockCtx.globalAlpha = 1;
+        
+        if(erosion > 0) {
+            let crackCount = Math.floor(erosion / 8) + 1;
+            crackCount = Math.min(crackCount, 28);
+            for(let i=0; i<crackCount; i++) {
+                rockCtx.beginPath();
+                let startX = 30 + Math.random() * 240;
+                let startY = 20 + Math.random() * 150;
+                rockCtx.moveTo(startX, startY);
+                rockCtx.lineTo(startX + (Math.random() - 0.5)*24, startY + (Math.random())*28);
+                rockCtx.lineTo(startX + (Math.random() - 0.5)*20, startY + (Math.random())*45);
+                rockCtx.strokeStyle = `rgba(40, 20, 10, ${0.3 + erosion/180})`;
+                rockCtx.lineWidth = 2 + erosion/25;
+                rockCtx.stroke();
+            }
+            if(erosion > 30) {
+                let pitNum = Math.floor(erosion / 12);
+                for(let i=0;i<pitNum;i++) {
+                    rockCtx.beginPath();
+                    rockCtx.fillStyle = '#593822';
+                    rockCtx.arc(60+Math.random()*190, 45+Math.random()*130, 3+Math.random()*6, 0, Math.PI*2);
+                    rockCtx.fill();
+                    rockCtx.fillStyle = '#ab6c3c';
+                    rockCtx.arc(63+Math.random()*190, 47+Math.random()*130, 2+Math.random()*4, 0, Math.PI*2);
+                    rockCtx.fill();
+                }
+            }
+            if(erosion > 55) {
+                rockCtx.globalAlpha = 0.6;
+                for(let i=0;i<80;i++) {
+                    rockCtx.fillStyle = '#a55826';
+                    rockCtx.fillRect(10+Math.random()*280, 20+Math.random()*160, 2, 2);
+                }
+                rockCtx.globalAlpha = 1;
+            }
+        }
+        rockCtx.font = "bold 12px 'Segoe UI'";
+        rockCtx.fillStyle = "#ffffd0";
+        rockCtx.shadowBlur = 4;
+        rockCtx.fillText(`侵蚀强度 ${Math.round(erosion)}%`, 10, 25);
+        rockCtx.fillStyle = "#f9d791";
+        rockCtx.fillText("丹霞砂岩", 230, 185);
+        rockCtx.shadowBlur = 0;
+    }
+    
+    // 绘制山地土壤（剩余量决定土层高度及冲沟）
+    function drawSoil(remainPercent) {
+        if (!soilCtx) return;
+        soilCtx.clearRect(0, 0, soilCanvas.width, soilCanvas.height);
+        soilCtx.fillStyle = '#a57248';
+        soilCtx.fillRect(0, 0, soilCanvas.width, soilCanvas.height);
+        soilCtx.fillStyle = '#6f8c5d';
+        soilCtx.fillRect(0, 0, soilCanvas.width, 30);
+        soilCtx.fillStyle = '#8aa86b';
+        for(let i=0;i<50;i++) soilCtx.fillRect(10+Math.random()*280, 10+Math.random()*20, 2, 3);
+        
+        let soilHeight = 45 + (remainPercent / 100) * 110;
+        let baseY = soilCanvas.height - 25;
+        let topY = baseY - soilHeight;
+        if(topY < 8) topY = 8;
+        soilCtx.fillStyle = '#7c5a38';
+        soilCtx.fillRect(8, topY, soilCanvas.width-16, soilHeight);
+        soilCtx.fillStyle = '#4d2f1a';
+        for(let i=0;i<120;i++) {
+            soilCtx.fillRect(12+Math.random()*(soilCanvas.width-24), topY+Math.random()*soilHeight, 2, 2);
+        }
+        let lossRatio = 1 - remainPercent/100;
+        if(lossRatio > 0) {
+            let gullyNum = Math.floor(lossRatio * 20);
+            soilCtx.strokeStyle = '#5b311b';
+            soilCtx.lineWidth = 2.5;
+            for(let i=0;i<gullyNum;i++) {
+                soilCtx.beginPath();
+                let startX = 20+Math.random()*260;
+                let startY = topY + Math.random()*soilHeight;
+                soilCtx.moveTo(startX, startY);
+                soilCtx.lineTo(startX + (Math.random()-0.5)*24, startY + 8+Math.random()*12);
+                soilCtx.lineTo(startX + (Math.random()-0.5)*18, startY + 18+Math.random()*12);
+                soilCtx.stroke();
+            }
+            soilCtx.fillStyle = 'rgba(150,90,40,0.7)';
+            for(let i=0;i<lossRatio*55;i++) {
+                soilCtx.fillRect(14+Math.random()*270, soilCanvas.height-18+Math.random()*12, 3, 2);
+            }
+        }
+        soilCtx.font = "bold 12px 'Segoe UI'";
+        soilCtx.fillStyle = "#faf0cf";
+        soilCtx.shadowBlur = 3;
+        soilCtx.fillText(`土壤剩余 ${Math.round(remainPercent)}%`, 10, 42);
+        soilCtx.fillStyle = "#fbcb7b";
+        soilCtx.fillText("山地腐殖层", 210, 185);
+    }
+    
+    function drawAll() {
+        drawRock(rockErosionPercent);
+        drawSoil(soilRemainPercent);
+        // 更新进度条文字
+        const rockFill = document.getElementById('rockErosionFill');
+        const rockText = document.getElementById('rockErosionText');
+        const soilFill = document.getElementById('soilRemainFill');
+        const soilText = document.getElementById('soilRemainText');
+        if(rockFill) rockFill.style.width = `${rockErosionPercent}%`;
+        if(rockText) rockText.innerHTML = `侵蚀率: ${Math.round(rockErosionPercent)}%`;
+        if(soilFill) soilFill.style.width = `${soilRemainPercent}%`;
+        if(soilText) soilText.innerHTML = `保有量: ${Math.round(soilRemainPercent)}%`;
+    }
+    
+    // 重置实验 (装置回到初始)
+    function resetExperiment() {
+        rockErosionPercent = 0;
+        soilRemainPercent = 100;
+        drawAll();
+        // 同时保留记录区文案不变，但用户再次实验时会覆盖；为了重置完全，可清除记录但不强制，更符合教学逻辑：重置装置但保留之前记录，再次点击会覆盖新记录。
+        // 为了用户体验：重置时不清除文字，但可以让用户在覆盖时看到最新。同时结论会动态刷新。
+        updateConclusionFromRecords();
+    }
+    
+    // 播放雨滴动画
+    let activeRainAnimation = null;
+    function stopRainEffect() {
+        if(activeRainAnimation) {
+            cancelAnimationFrame(activeRainAnimation);
+            activeRainAnimation = null;
+        }
+        const existingRain = document.querySelector('.dynamic-rain-canvas');
+        if(existingRain) existingRain.remove();
+    }
+    
+    function playRainEffect(intensity) {
+        stopRainEffect();
+        const rainCanvas = document.createElement('canvas');
+        rainCanvas.className = 'dynamic-rain-canvas';
+        rainCanvas.style.position = 'fixed';
+        rainCanvas.style.top = '0';
+        rainCanvas.style.left = '0';
+        rainCanvas.style.width = '100%';
+        rainCanvas.style.height = '100%';
+        rainCanvas.style.pointerEvents = 'none';
+        rainCanvas.style.zIndex = '1000';
+        document.body.appendChild(rainCanvas);
+        
+        const resizeHandler = () => {
+            rainCanvas.width = window.innerWidth;
+            rainCanvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resizeHandler);
+        resizeHandler();
+        
+        const rainCtx = rainCanvas.getContext('2d');
+        let drops = [];
+        const dropCount = intensity === 200 ? 110 : 260;
+        for(let i=0;i<dropCount;i++) {
+            drops.push({
+                x: Math.random() * rainCanvas.width,
+                y: Math.random() * rainCanvas.height,
+                len: 6 + Math.random() * 10,
+                speed: 4 + Math.random() * 12
+            });
+        }
+        
+        let startTime = performance.now();
+        let animId;
+        const drawRain = (now) => {
+            if(now - startTime > 1800) {
+                cancelAnimationFrame(animId);
+                window.removeEventListener('resize', resizeHandler);
+                rainCanvas.remove();
+                activeRainAnimation = null;
+                return;
+            }
+            if(!rainCanvas.parentNode) {
+                cancelAnimationFrame(animId);
+                activeRainAnimation = null;
+                return;
+            }
+            rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+            rainCtx.beginPath();
+            for(let d of drops) {
+                rainCtx.moveTo(d.x, d.y);
+                rainCtx.lineTo(d.x, d.y + d.len);
+                rainCtx.strokeStyle = `rgba(180, 220, 255, ${0.5+Math.random()*0.4})`;
+                rainCtx.lineWidth = 1.5 + (intensity===500?0.8:0);
+                d.y += d.speed;
+                if(d.y > rainCanvas.height) {
+                    d.y = -15;
+                    d.x = Math.random() * rainCanvas.width;
+                }
+            }
+            rainCtx.stroke();
+            animId = requestAnimationFrame(drawRain);
+        };
+        animId = requestAnimationFrame(drawRain);
+        activeRainAnimation = animId;
+    }
+    
+    // 核心降雨侵蚀模拟 (200mm 或 500mm)
+    function applyRainfall(rainMM) {
+        // 首先重置装置到未侵蚀状态，确保独立实验效果
+        rockErosionPercent = 0;
+        soilRemainPercent = 100;
+        
+        let rockAdd = 0, soilLoss = 0;
+        let rockDetail = "", soilDetail = "";
+        if(rainMM === 200) {
+            rockAdd = 22;
+            soilLoss = 28;
+            rockDetail = "⛰️ 丹霞岩石表面出现少量溶蚀孔洞及细小裂隙，部分岩屑脱落，侵蚀程度约22%。";
+            soilDetail = "🌱 山地土壤表层被冲刷出浅细沟，约28%的土壤颗粒被雨水携带流失，结构轻微破坏。";
+        } else if(rainMM === 500) {
+            rockAdd = 68;
+            soilLoss = 75;
+            rockDetail = "⛰️ 丹霞岩石表面遭受强烈冲刷，形成密集深长沟缝，岩块明显剥落，侵蚀率高达68%，岩石完整性显著下降。";
+            soilDetail = "🌱 山地土壤发生剧烈片蚀与细沟侵蚀，超过75%土壤被冲走，露出底层碎石，肥力严重损失。";
+        }
+        
+        rockErosionPercent = Math.min(98, rockAdd);
+        soilRemainPercent = Math.max(2, 100 - soilLoss);
+        
+        // 更新绘图
+        drawAll();
+        
+        // 更新对应的记录区内容
+        const fullDesc = `【岩石】侵蚀率 ${Math.round(rockErosionPercent)}%，${rockDetail}<br>【土壤】剩余 ${Math.round(soilRemainPercent)}%，${soilDetail}`;
+        if(rainMM === 200) {
+            const descElem = document.getElementById('desc200');
+            if(descElem) descElem.innerHTML = fullDesc;
+        } else {
+            const descElem = document.getElementById('desc500');
+            if(descElem) descElem.innerHTML = fullDesc;
+        }
+        
+        // 更新结论区（基于已有记录对比）
+        updateConclusionFromRecords();
+        
+        // 播放降水动画
+        playRainEffect(rainMM);
+        
+        // 附加按钮反馈震动效果（仅视觉）
+        const btn = rainMM === 200 ? document.getElementById('rain200Btn') : document.getElementById('rain500Btn');
+        if(btn) {
+            btn.style.transform = 'scale(0.97)';
+            setTimeout(() => { if(btn) btn.style.transform = ''; }, 120);
+        }
+    }
+    
+    // 对比200和500记录的结论生成
+    function updateConclusionFromRecords() {
+        const desc200Elem = document.getElementById('desc200');
+        const desc500Elem = document.getElementById('desc500');
+        const desc200 = desc200Elem ? desc200Elem.innerHTML : "";
+        const desc500 = desc500Elem ? desc500Elem.innerHTML : "";
+        const has200 = desc200.includes('侵蚀率');
+        const has500 = desc500.includes('侵蚀率');
+        const conclusionDiv = document.getElementById('conclusionText');
+        if(!conclusionDiv) return;
+        
+        if(has200 && has500) {
+            // 提取数值简单示意
+            let rock200 = 22, soil200 = 72, rock500 = 68, soil500 = 25;
+            const match200Rock = desc200.match(/侵蚀率\s*(\d+)%/);
+            const match200Soil = desc200.match(/剩余\s*(\d+)%/);
+            const match500Rock = desc500.match(/侵蚀率\s*(\d+)%/);
+            const match500Soil = desc500.match(/剩余\s*(\d+)%/);
+            if(match200Rock) rock200 = parseInt(match200Rock[1]);
+            if(match200Soil) soil200 = parseInt(match200Soil[1]);
+            if(match500Rock) rock500 = parseInt(match500Rock[1]);
+            if(match500Soil) soil500 = parseInt(match500Soil[1]);
+            
+            conclusionDiv.innerHTML = `
+                <strong>🧪 对比实验结果：</strong><br>
+                📌 200mm降水量下：丹霞岩石侵蚀程度约${rock200}%，土壤剩余约${soil200}%；<br>
+                📌 500mm降水量下：丹霞岩石侵蚀程度大幅增至${rock500}%，土壤剩余仅约${soil500}%。<br><br>
+                <strong>✅ 最终结论：</strong> 降水量越大，对丹霞岩石和山地土壤的侵蚀作用越显著。<br>
+                <strong>🌍 原因总结：</strong> ① 500mm降水强度更高，雨滴动能及地表径流冲刷力更强，加剧岩石裂隙扩张与岩屑剥离；② 山地土壤结构松散，强降水引发超渗产流，细沟迅速发育导致大量土粒流失。③ 武夷丹霞地区抗蚀性虽比土壤强，但强降水下仍会经历明显剥蚀。
+            `;
+        } else if(has200) {
+            conclusionDiv.innerHTML = `⚡ 目前仅有200mm降水实验记录，请继续进行500mm降水量实验，以完整对比侵蚀差异。<br>当前200mm结果显示轻中度侵蚀，500mm预期侵蚀更剧烈。`;
+        } else if(has500) {
+            conclusionDiv.innerHTML = `⚡ 目前仅有500mm降水实验记录，建议进行200mm实验对比，直观感受降水量对侵蚀控制的量级差异。500mm已显示严重侵蚀。`;
+        } else {
+            conclusionDiv.innerHTML = `🧪 请分别点击「200mm降水量」和「500mm降水量」完成两组实验，系统将自动对比岩石与土壤侵蚀程度并总结原因。`;
+        }
+    }
+    
+    // 重置全部（包括记录区文字重置）
+    function fullReset() {
+        stopRainEffect();
+        rockErosionPercent = 0;
+        soilRemainPercent = 100;
+        drawAll();
+        // 重置记录区文字为初始待实验状态
+        const desc200 = document.getElementById('desc200');
+        const desc500 = document.getElementById('desc500');
+        if(desc200) desc200.innerHTML = '⚡ 点击「200mm降水量」进行模拟，记录岩石与土壤侵蚀现象。';
+        if(desc500) desc500.innerHTML = '⚡ 点击「500mm降水量」进行模拟，记录强降水侵蚀状况。';
+        updateConclusionFromRecords();
+        // 额外重置按钮反馈
+        const resetBtn = document.getElementById('resetExpBtn');
+        if(resetBtn) {
+            resetBtn.style.transform = 'scale(0.97)';
+            setTimeout(() => { if(resetBtn) resetBtn.style.transform = ''; }, 150);
+        }
+    }
+    
+    // 绑定事件 & 初始化
+    window.addEventListener('DOMContentLoaded', () => {
+        initCanvasSize();
+        const rain200 = document.getElementById('rain200Btn');
+        const rain500 = document.getElementById('rain500Btn');
+        const resetBtn = document.getElementById('resetExpBtn');
+        if(rain200) rain200.addEventListener('click', () => applyRainfall(200));
+        if(rain500) rain500.addEventListener('click', () => applyRainfall(500));
+        if(resetBtn) resetBtn.addEventListener('click', fullReset);
+        // 初始绘图
+        drawAll();
+        updateConclusionFromRecords();
+    });
+    
+    // 确保窗口resize时画板重绘（尺寸不变但重绘清晰度）
+    window.addEventListener('resize', () => {
+        drawRock(rockErosionPercent);
+        drawSoil(soilRemainPercent);
+    });
+</script>
+</body>
+</html>

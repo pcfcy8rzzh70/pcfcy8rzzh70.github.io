@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)file:///D:/%E4%B8%8B%E8%BD%BD/cover.html.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>生成实验封面图</title>
+    <style>
+        body {
+            background: #2b2b2b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            width: 1200px;
+            height: 628px;
+            background: linear-gradient(135deg, #f5e7d3, #e8d5b5);
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        .title {
+            font-size: 64px;
+            font-weight: 800;
+            color: #6b2e12;
+            text-shadow: 4px 4px 0 #ffcd94;
+            margin-bottom: 20px;
+            z-index: 2;
+        }
+        .sub {
+            font-size: 28px;
+            color: #9b4a24;
+            background: rgba(255,240,200,0.8);
+            padding: 8px 28px;
+            border-radius: 60px;
+            margin-bottom: 30px;
+        }
+        .device-show {
+            display: flex;
+            gap: 40px;
+            background: #e7dcc0cc;
+            backdrop-filter: blur(8px);
+            padding: 20px 40px;
+            border-radius: 80px;
+            z-index: 2;
+        }
+        .device-item {
+            text-align: center;
+            background: #fff2df;
+            padding: 15px 30px;
+            border-radius: 48px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .device-item h3 {
+            font-size: 32px;
+            margin: 0 0 10px;
+            color: #5c2e1a;
+        }
+        .device-item p {
+            font-size: 20px;
+            color: #6b3a1c;
+            background: #ffefc0;
+            border-radius: 30px;
+            padding: 6px 15px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 22px;
+            color: #4a2a14;
+            background: #ffefcfcc;
+            padding: 8px 32px;
+            border-radius: 60px;
+        }
+        .bg-icon {
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            bottom: 0;
+            right: 0;
+            transform: rotate(-10deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="coverCard">
+        <div class="title">🌧️ 探究武夷丹霞地貌</div>
+        <div class="sub">雨水侵蚀虚拟实验室</div>
+        <div class="device-show">
+            <div class="device-item">
+                <h3>⛰️ 丹霞岩石</h3>
+                <p>侵蚀强度 0% → 68%</p>
+            </div>
+            <div class="device-item">
+                <h3>🌱 山地土壤</h3>
+                <p>剩余量 100% → 25%</p>
+            </div>
+        </div>
+        <div class="footer">
+            💧 200mm / 500mm 降水量对比实验
+        </div>
+        <div class="bg-icon">🏔️</div>
+    </div>
+    <script>
+        // 自动将卡片转为图片下载（可选）
+        // 用户也可以手动截图
+        console.log("封面图已显示，请右键点击图片保存，或使用截图工具保存为图片（尺寸1200x628）");
+    </script>
+
+</body></html>
